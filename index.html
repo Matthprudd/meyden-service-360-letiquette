@@ -1,1 +1,2313 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Service 360° — Meyden × L'Étiquette</title>
 
+<style>
+:root{
+  --bg:#060606;
+  --panel:#111;
+  --panel2:#181818;
+  --orange:#ff6a00;
+  --orange2:#ffa24a;
+  --red:#b40018;
+  --green:#25d07c;
+  --blue:#4ca3ff;
+  --text:#f6f6f6;
+  --muted:#b9b9b9;
+  --line:rgba(255,255,255,.13);
+  --danger:#ff4d5e;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Arial, Helvetica, sans-serif;
+  color:var(--text);
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 5% 0%, rgba(255,106,0,.20), transparent 33%),
+    radial-gradient(circle at 90% 5%, rgba(180,0,24,.16), transparent 38%),
+    radial-gradient(circle at 50% 100%, rgba(76,163,255,.10), transparent 30%),
+    linear-gradient(180deg,#050505,#101010 58%,#050505);
+}
+
+button,input,select,textarea{
+  font-family:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.app{
+  max-width:1480px;
+  margin:0 auto;
+  padding:16px;
+}
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:80;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  background:rgba(8,8,8,.92);
+  backdrop-filter:blur(14px);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:13px 15px;
+  box-shadow:0 12px 42px rgba(0,0,0,.48);
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo{
+  width:52px;
+  height:52px;
+  border-radius:17px;
+  background:linear-gradient(135deg,var(--orange),#240000);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  box-shadow:0 0 30px rgba(255,106,0,.32);
+}
+
+.brand h1{
+  font-size:17px;
+  line-height:1.05;
+}
+
+.brand small{
+  font-size:11px;
+  color:var(--muted);
+}
+
+.nav{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.nav button,
+.btn{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.055);
+  color:white;
+  padding:10px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900;
+}
+
+.nav button:hover,
+.nav button.active{
+  border-color:var(--orange);
+  background:rgba(255,106,0,.16);
+}
+
+.btn{
+  border-radius:16px;
+  padding:12px 15px;
+  background:linear-gradient(135deg,var(--orange),var(--red));
+  border:0;
+  box-shadow:0 10px 28px rgba(255,106,0,.18);
+}
+
+.btn.secondary{
+  background:rgba(255,255,255,.075);
+  border:1px solid var(--line);
+  box-shadow:none;
+}
+
+.btn.small{
+  padding:8px 10px;
+  border-radius:12px;
+  font-size:11px;
+}
+
+.btn.danger{
+  background:rgba(255,77,94,.15);
+  border:1px solid rgba(255,77,94,.35);
+  color:#ffd1d6;
+  box-shadow:none;
+}
+
+.section{
+  display:none;
+  margin-top:18px;
+}
+
+.section.active{
+  display:block;
+}
+
+.hero{
+  border:1px solid var(--line);
+  border-radius:30px;
+  padding:42px 28px;
+  position:relative;
+  overflow:hidden;
+  background:
+    linear-gradient(115deg,rgba(255,106,0,.20),transparent 35%),
+    linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.025));
+}
+
+.hero:after{
+  content:"BRANCHE";
+  position:absolute;
+  right:-28px;
+  bottom:-38px;
+  font-size:118px;
+  font-weight:900;
+  color:rgba(255,255,255,.035);
+}
+
+.kicker{
+  display:inline-flex;
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,106,0,.45);
+  background:rgba(255,106,0,.12);
+  color:#ffd4b3;
+  font-size:12px;
+  font-weight:900;
+  margin-bottom:16px;
+}
+
+.hero h2{
+  font-size:clamp(32px,6vw,70px);
+  line-height:.92;
+  letter-spacing:-2px;
+  max-width:1080px;
+}
+
+.hero p{
+  margin-top:18px;
+  max-width:910px;
+  color:#d6d6d6;
+  font-size:18px;
+  line-height:1.45;
+}
+
+.ctas{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:22px;
+}
+
+.panel-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  gap:18px;
+  margin:26px 0 14px;
+}
+
+.panel-title h2{
+  font-size:34px;
+  letter-spacing:-.8px;
+}
+
+.panel-title p{
+  color:var(--muted);
+  max-width:760px;
+  line-height:1.45;
+}
+
+.grid{
+  display:grid;
+  gap:15px;
+}
+
+.cols2{grid-template-columns:repeat(2,1fr);}
+.cols3{grid-template-columns:repeat(3,1fr);}
+.cols4{grid-template-columns:repeat(4,1fr);}
+.cols5{grid-template-columns:repeat(5,1fr);}
+
+.card{
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:18px;
+  background:linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.025));
+  box-shadow:0 14px 36px rgba(0,0,0,.28);
+}
+
+.card h3{
+  font-size:20px;
+  margin-bottom:9px;
+}
+
+.card p,
+.card li{
+  color:#d0d0d0;
+  line-height:1.43;
+}
+
+.card ul{
+  padding-left:18px;
+  margin-top:8px;
+}
+
+.tag{
+  display:inline-flex;
+  padding:6px 10px;
+  border-radius:999px;
+  background:rgba(255,106,0,.13);
+  border:1px solid rgba(255,106,0,.34);
+  color:#ffd6bb;
+  font-size:12px;
+  font-weight:900;
+  margin-bottom:9px;
+}
+
+.price{
+  font-size:22px;
+  color:var(--orange2);
+  font-weight:900;
+  margin:8px 0;
+}
+
+.notice{
+  border:1px dashed rgba(255,255,255,.27);
+  background:rgba(255,255,255,.055);
+  border-radius:18px;
+  padding:14px;
+  color:#ddd;
+  line-height:1.45;
+}
+
+.form{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.form.three{
+  grid-template-columns:1fr 1fr 1fr;
+}
+
+input,select,textarea{
+  width:100%;
+  background:#0c0c0c;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:12px;
+  color:white;
+  font-size:14px;
+}
+
+textarea{
+  min-height:112px;
+  grid-column:1/-1;
+}
+
+.service-card{
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+
+.service-card button{
+  margin-top:auto;
+}
+
+.cartbox{
+  position:fixed;
+  right:16px;
+  bottom:16px;
+  z-index:70;
+  width:335px;
+  max-width:calc(100vw - 32px);
+  border:1px solid rgba(255,106,0,.45);
+  background:rgba(8,8,8,.93);
+  backdrop-filter:blur(12px);
+  border-radius:22px;
+  padding:14px;
+  box-shadow:0 18px 50px rgba(0,0,0,.52);
+}
+
+.cartbox b{
+  color:var(--orange2);
+}
+
+.cartbox small{
+  color:var(--muted);
+  line-height:1.35;
+}
+
+.cart-list{
+  font-size:12px;
+  color:#ddd;
+  margin:9px 0;
+  max-height:120px;
+  overflow:auto;
+}
+
+.table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13px;
+  overflow:hidden;
+  border-radius:16px;
+}
+
+.table th,
+.table td{
+  border-bottom:1px solid var(--line);
+  padding:11px;
+  text-align:left;
+  vertical-align:top;
+}
+
+.table th{
+  color:#ffd6bb;
+  background:rgba(255,106,0,.09);
+}
+
+.adminbar{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin-bottom:14px;
+}
+
+.loginbox{
+  max-width:560px;
+  margin:30px auto;
+}
+
+.mini{
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.35;
+}
+
+.pillrow{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:10px;
+}
+
+.pill{
+  display:inline-flex;
+  padding:6px 9px;
+  border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--line);
+  font-size:12px;
+  color:#ddd;
+  margin:2px;
+}
+
+.status{
+  display:inline-flex;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:900;
+  border:1px solid var(--line);
+}
+
+.sNouveau{background:rgba(76,163,255,.14);color:#acd6ff;}
+.sAnalyse{background:rgba(255,209,102,.14);color:#ffe5a2;}
+.sProduction{background:rgba(185,140,255,.14);color:#dec9ff;}
+.sLivre{background:rgba(38,208,124,.14);color:#bfffd9;}
+.sRelance{background:rgba(255,77,94,.14);color:#ffd1d6;}
+.sArchive{background:rgba(255,255,255,.08);color:#ccc;}
+
+.kanban{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:12px;
+}
+
+.column{
+  border:1px solid var(--line);
+  border-radius:22px;
+  background:rgba(255,255,255,.035);
+  padding:12px;
+  min-height:280px;
+}
+
+.column h3{
+  font-size:15px;
+  margin-bottom:12px;
+  color:#ffd6bb;
+}
+
+.kcard{
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:rgba(0,0,0,.22);
+  padding:12px;
+  margin-bottom:10px;
+}
+
+.kcard b{
+  display:block;
+  color:white;
+  margin-bottom:5px;
+}
+
+.kcard small{
+  color:var(--muted);
+  line-height:1.35;
+}
+
+.drawer{
+  position:fixed;
+  inset:0;
+  display:none;
+  z-index:100;
+  background:rgba(0,0,0,.72);
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+}
+
+.drawer.show{
+  display:flex;
+}
+
+.drawer-inner{
+  width:min(1180px,100%);
+  max-height:92vh;
+  overflow:auto;
+  border:1px solid var(--line);
+  border-radius:26px;
+  background:#0b0b0b;
+  padding:18px;
+  box-shadow:0 24px 80px rgba(0,0,0,.65);
+}
+
+.tabs{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:14px 0;
+}
+
+.tabs button{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.06);
+  color:white;
+  padding:9px 11px;
+  border-radius:999px;
+  font-weight:900;
+  font-size:12px;
+}
+
+.tabs button.active{
+  border-color:var(--orange);
+  background:rgba(255,106,0,.16);
+}
+
+.tabpane{
+  display:none;
+}
+
+.tabpane.active{
+  display:block;
+}
+
+.scorebar{
+  height:10px;
+  border-radius:999px;
+  background:rgba(255,255,255,.09);
+  overflow:hidden;
+  margin:8px 0;
+}
+
+.scorefill{
+  height:100%;
+  background:linear-gradient(90deg,var(--red),var(--orange),var(--green));
+  width:0%;
+}
+
+.copybox{
+  background:#050505;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:12px;
+  color:#ddd;
+  white-space:pre-wrap;
+  line-height:1.35;
+}
+
+.clientbox{
+  border-left:4px solid var(--orange);
+  padding-left:14px;
+}
+
+.alert{
+  border:1px solid rgba(255,77,94,.35);
+  background:rgba(255,77,94,.12);
+  border-radius:16px;
+  padding:12px;
+  color:#ffd1d6;
+  margin-bottom:10px;
+}
+
+.good{
+  border-color:rgba(38,208,124,.35);
+  background:rgba(38,208,124,.10);
+  color:#bfffd9;
+}
+
+.footer{
+  margin:28px 0 8px;
+  padding:22px;
+  border:1px solid var(--line);
+  border-radius:24px;
+  color:var(--muted);
+  text-align:center;
+  background:rgba(255,255,255,.035);
+}
+
+.archbox{
+  position:relative;
+  overflow:hidden;
+}
+
+.archbox:before{
+  content:"";
+  position:absolute;
+  left:24px;
+  top:60px;
+  bottom:24px;
+  width:2px;
+  background:linear-gradient(var(--orange),rgba(255,106,0,.05));
+}
+
+.architem{
+  position:relative;
+  margin-left:34px;
+  margin-bottom:14px;
+  padding:14px;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:rgba(0,0,0,.18);
+}
+
+.architem:before{
+  content:"";
+  position:absolute;
+  left:-25px;
+  top:20px;
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  background:var(--orange);
+  box-shadow:0 0 16px rgba(255,106,0,.5);
+}
+
+@media(max-width:1200px){
+  .cols5,.cols4{grid-template-columns:1fr 1fr;}
+  .kanban{grid-template-columns:1fr 1fr 1fr;}
+  .topbar{flex-direction:column;align-items:flex-start;}
+  .form,.form.three{grid-template-columns:1fr;}
+  .cartbox{position:static;width:auto;margin-top:18px;}
+}
+
+@media(max-width:760px){
+  .cols5,.cols4,.cols3,.cols2{grid-template-columns:1fr;}
+  .kanban{grid-template-columns:1fr;}
+  .hero{padding:30px 18px;}
+  .panel-title{display:block;}
+  .panel-title h2{font-size:28px;margin-bottom:8px;}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">V5</div>
+    <div>
+      <h1>Sous-site Service 360° — Meyden × L'Étiquette</h1>
+      <small>Branche du Mouvement Artistique du Québec • future intégration à la plateforme de diffusion Meyden</small>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <button class="active" onclick="showSection('accueil',this)">Accueil</button>
+    <button onclick="showSection('ecosysteme',this)">Écosystème</button>
+    <button onclick="showSection('catalogue',this)">Catalogue</button>
+    <button onclick="showSection('soumettre',this)">Soumettre</button>
+    <button onclick="showSection('client',this)">Portail client</button>
+    <button onclick="showSection('admin',this)">Admin</button>
+  </nav>
+</header>
+
+<section id="accueil" class="section active">
+  <div class="hero">
+    <div class="kicker">Sous-site vitrine public • branche Service 360° • outil de travail interne</div>
+    <h2>Une branche opérationnelle du Mouvement Artistique du Québec.</h2>
+    <p>
+      Le Service 360° Meyden × L'Étiquette n'est pas la plateforme finale Meyden.
+      C'est un sous-site vitrine public et un outil de travail interne, conçu pour recevoir,
+      organiser, structurer et suivre les demandes d'artistes, d'artisans et de projets culturels.
+    </p>
+
+    <div class="ctas">
+      <button class="btn" onclick="navTo('ecosysteme')">Voir l'architecture</button>
+      <button class="btn secondary" onclick="navTo('soumettre')">Soumettre un projet</button>
+      <button class="btn secondary" onclick="navTo('admin')">Centre admin</button>
+    </div>
+
+    <div class="notice" style="margin-top:18px">
+      Position officielle : ce sous-site est une branche spécialisée de l'écosystème Meyden.
+      À long terme, il pourra s'intégrer à la future plateforme de diffusion Meyden.
+      Trovici.com demeure un partenaire technologique interne Meyden pour soutenir les vitrines,
+      prototypes, catalogues, fiches et outils web.
+    </div>
+  </div>
+
+  <div class="panel-title">
+    <h2>Finalité V5</h2>
+    <p>Clarifier le rôle exact : sous-site public + outil interne + branche spécialisée, sans confondre avec la future grande plateforme Meyden.</p>
+  </div>
+
+  <div class="grid cols4">
+    <div class="card">
+      <span class="tag">Public</span>
+      <h3>Sous-site vitrine</h3>
+      <p>Présenter la branche Service 360°, le catalogue, les forfaits, la mission et la convergence Meyden × L'Étiquette.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag">Client</span>
+      <h3>Porte d'entrée</h3>
+      <p>Permettre aux artistes et artisans de soumettre un projet et de suivre les prochaines étapes.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag">Interne</span>
+      <h3>Outil de travail</h3>
+      <p>Permettre aux admins de gérer projets, services, livrables, finances, communications et échéances.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag">Futur</span>
+      <h3>Intégration Meyden</h3>
+      <p>Préparer l'intégration future avec la plateforme de diffusion Meyden, plus large et publique.</p>
+    </div>
+  </div>
+</section>
+
+<section id="ecosysteme" class="section">
+  <div class="panel-title">
+    <h2>Architecture officielle Meyden</h2>
+    <p>Hiérarchie claire pour éviter la confusion entre Mouvement Artistique, plateforme future et branche Service 360°.</p>
+  </div>
+
+  <div class="grid cols2">
+    <div class="card archbox">
+      <span class="tag">Architecture</span>
+
+      <div class="architem">
+        <h3>1. Meyden</h3>
+        <p>Mouvement Artistique du Québec : structure mère, vision globale, artistes, artisans, production, diffusion, technologie, événements et rayonnement.</p>
+      </div>
+
+      <div class="architem">
+        <h3>2. Future plateforme de diffusion Meyden</h3>
+        <p>Grande plateforme à venir : contenus, artistes, vidéos, musique, monitor, profils, monétisation, visibilité publique et outils créateurs.</p>
+      </div>
+
+      <div class="architem">
+        <h3>3. Branches spécialisées</h3>
+        <p>Services opérationnels développés à l'intérieur de l'écosystème : Service 360°, Meyden Metal, Art & Fact, Live, Monitor, événements, etc.</p>
+      </div>
+
+      <div class="architem">
+        <h3>4. Service 360° Meyden × L'Étiquette</h3>
+        <p>Sous-site vitrine public + outil interne pour recevoir, structurer, suivre et développer les projets avant leur rayonnement plus large.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="tag">Position officielle</span>
+      <h3>Texte de positionnement</h3>
+      <div class="copybox" id="positionText">Le Service 360° Meyden × L'Étiquette n'est pas la plateforme finale du Mouvement Artistique du Québec.
+
+Il constitue une branche spécialisée de l'écosystème Meyden, développée sous forme de sous-site vitrine public et d'outil de travail interne.
+
+Sa fonction est de présenter, recevoir, organiser, structurer et suivre les demandes liées aux services artistiques, médiatiques, audiovisuels, événementiels, technologiques et promotionnels offerts dans le cadre du Mouvement Artistique du Québec.
+
+À long terme, cette branche pourra s'intégrer à la future plateforme de diffusion Meyden, qui aura une portée plus large : diffusion de contenu, profils artistes, visibilité publique, outils créateurs, monitor, monétisation et rayonnement culturel.</div>
+
+      <button class="btn secondary small" style="margin-top:12px" onclick="copyText('positionText')">Copier le positionnement</button>
+    </div>
+  </div>
+</section>
+
+<section id="catalogue" class="section">
+  <div class="panel-title">
+    <h2>Catalogue à la carte</h2>
+    <p>Catalogue de la branche Service 360° : services publics, mais suivis ensuite dans le centre admin.</p>
+  </div>
+
+  <div class="grid cols3" id="services"></div>
+</section>
+
+<section id="soumettre" class="section">
+  <div class="panel-title">
+    <h2>Soumettre un projet</h2>
+    <p>Le formulaire crée une fiche projet pour la branche Service 360°.</p>
+  </div>
+
+  <div class="card">
+    <div class="form three">
+      <input id="clientName" placeholder="Nom complet du contact" />
+      <input id="clientEmail" placeholder="Courriel" />
+      <input id="clientPhone" placeholder="Téléphone" />
+      <input id="artistName" placeholder="Nom d'artiste / groupe / projet" />
+      <input id="city" placeholder="Ville / région" />
+      <input id="source" placeholder="Source du contact ex: Facebook, référence, show" />
+
+      <select id="projectType">
+        <option>Type de projet</option>
+        <option>Musique / groupe</option>
+        <option>Artisan / créateur</option>
+        <option>Événement</option>
+        <option>Vidéo / contenu</option>
+        <option>Merch</option>
+        <option>Technologie / page web</option>
+        <option>Partenariat</option>
+      </select>
+
+      <select id="level">
+        <option>Niveau du projet</option>
+        <option>Idée à structurer</option>
+        <option>Projet actif</option>
+        <option>Prêt à lancer</option>
+        <option>Événement à venir</option>
+        <option>Projet à haut potentiel</option>
+      </select>
+
+      <select id="objective">
+        <option>Objectif principal</option>
+        <option>Visibilité</option>
+        <option>Image</option>
+        <option>Dossier de presse</option>
+        <option>Photo / vidéo</option>
+        <option>Événement</option>
+        <option>Merch</option>
+        <option>Revenus</option>
+        <option>International</option>
+      </select>
+
+      <input id="links" placeholder="Liens sociaux / musique / vidéo / portfolio" />
+      <input id="targetDate" type="date" title="Date importante" />
+
+      <select id="budget">
+        <option>Budget approximatif</option>
+        <option>Moins de 150 $</option>
+        <option>150 $ à 350 $</option>
+        <option>350 $ à 750 $</option>
+        <option>750 $ à 1500 $</option>
+        <option>1500 $ et plus</option>
+      </select>
+
+      <textarea id="projectMsg" placeholder="Description du projet, besoin urgent, matériel déjà disponible, objectifs à 3-6 mois."></textarea>
+    </div>
+
+    <button class="btn" style="margin-top:12px" onclick="submitProject()">Créer la fiche projet</button>
+    <div class="notice" id="submitResult" style="display:none;margin-top:14px"></div>
+  </div>
+</section>
+
+<section id="client" class="section">
+  <div class="panel-title">
+    <h2>Portail client simulé</h2>
+    <p>Le client entre son code projet pour voir le suivi de sa demande dans la branche Service 360°.</p>
+  </div>
+
+  <div class="card">
+    <div class="form">
+      <input id="clientProjectCode" placeholder="Code projet ex: P-123456 ou C-1234" />
+      <button class="btn" onclick="loadClientPortal()">Ouvrir mon projet</button>
+    </div>
+
+    <div id="clientPortalResult" style="margin-top:16px"></div>
+  </div>
+</section>
+
+<section id="admin" class="section">
+  <div id="loginPanel" class="card loginbox">
+    <span class="tag">Accès interne</span>
+    <h2>Centre admin — Branche Service 360°</h2>
+    <p style="color:#ccc;margin:10px 0 16px">Pseudo + code 4 chiffres pour tester. La version réelle utilisera une authentification sécurisée.</p>
+
+    <div class="form" style="grid-template-columns:1fr">
+      <input id="adminPseudo" placeholder="Pseudo admin" />
+      <input id="adminCode" maxlength="4" placeholder="Code 4 chiffres" />
+    </div>
+
+    <button class="btn" style="margin-top:12px" onclick="adminLogin()">Entrer</button>
+
+    <div class="notice" style="margin-top:12px">
+      Codes test : MEYDEN / 1984 — LETIQUETTE / 2026 — ADMIN / 3600
+    </div>
+  </div>
+
+  <div id="dashboardPanel" style="display:none">
+    <div class="adminbar">
+      <div>
+        <h2>Centre de Contrôle 360° V5</h2>
+        <p class="mini" id="adminHello"></p>
+      </div>
+
+      <div>
+        <button class="btn secondary small" onclick="seedAll()">Données test</button>
+        <button class="btn secondary small" onclick="exportAll()">Export JSON</button>
+        <button class="btn danger small" onclick="clearAll()">Vider prototype</button>
+        <button class="btn small" onclick="adminLogout()">Sortir</button>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="active" onclick="openAdminTab('admOverview',this)">Vue globale</button>
+      <button onclick="openAdminTab('admProjects',this)">Projets</button>
+      <button onclick="openAdminTab('admArtists',this)">Artistes</button>
+      <button onclick="openAdminTab('admPartners',this)">Partenaires</button>
+      <button onclick="openAdminTab('admOpps',this)">Opportunités</button>
+      <button onclick="openAdminTab('admCalendar',this)">Calendrier</button>
+      <button onclick="openAdminTab('admFinance',this)">Finances</button>
+      <button onclick="openAdminTab('admTemplates',this)">Modèles</button>
+    </div>
+
+    <div id="admOverview" class="tabpane active">
+      <div class="notice" style="margin-bottom:15px">
+        Admin de la branche Service 360° seulement. Cette branche alimente potentiellement la future plateforme de diffusion Meyden, mais elle n'est pas la plateforme finale.
+      </div>
+
+      <div id="alertsBox"></div>
+
+      <div class="grid cols5" style="margin-bottom:15px">
+        <div class="card"><span class="tag">Nouveaux</span><h3 id="kpiNew">0</h3><p>À analyser</p></div>
+        <div class="card"><span class="tag">Production</span><h3 id="kpiProd">0</h3><p>En cours</p></div>
+        <div class="card"><span class="tag">Relances</span><h3 id="kpiRelance">0</h3><p>À suivre</p></div>
+        <div class="card"><span class="tag">Valeur</span><h3 id="kpiValue">0 $</h3><p>Total indicatif</p></div>
+        <div class="card"><span class="tag">Solde</span><h3 id="kpiBalance">0 $</h3><p>À recevoir</p></div>
+      </div>
+
+      <div class="panel-title">
+        <h2>Pipeline de la branche 360°</h2>
+        <p>Vue rapide par statut.</p>
+      </div>
+
+      <div class="kanban" id="kanban"></div>
+    </div>
+
+    <div id="admProjects" class="tabpane">
+      <div class="card">
+        <div class="form three" style="margin-bottom:12px">
+          <input id="searchInput" placeholder="Rechercher projet, client, ville, service..." oninput="renderAdmin()" />
+
+          <select id="filterStatus" onchange="renderAdmin()">
+            <option value="">Tous les statuts</option>
+            <option>Nouveau</option>
+            <option>En analyse</option>
+            <option>Proposition</option>
+            <option>En production</option>
+            <option>Livré</option>
+            <option>À relancer</option>
+            <option>Archivé</option>
+          </select>
+
+          <select id="filterAssigned" onchange="renderAdmin()">
+            <option value="">Toutes assignations</option>
+            <option>Meyden + L'Étiquette</option>
+            <option>Meyden</option>
+            <option>L'Étiquette</option>
+          </select>
+        </div>
+
+        <div style="overflow:auto">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Projet</th>
+                <th>Client</th>
+                <th>Score</th>
+                <th>Valeur</th>
+                <th>Action</th>
+                <th>Statut</th>
+                <th>Code client</th>
+                <th>Ouvrir</th>
+              </tr>
+            </thead>
+            <tbody id="projectRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="admArtists" class="tabpane">
+      <div class="panel-title">
+        <h2>Répertoire artistes / artisans</h2>
+        <p>Base interne de la branche 360°. Peut nourrir plus tard la future plateforme de diffusion Meyden.</p>
+      </div>
+
+      <div class="card">
+        <div class="form three">
+          <input id="artName" placeholder="Nom artiste / artisan">
+          <input id="artDiscipline" placeholder="Discipline">
+          <input id="artCity" placeholder="Ville">
+          <input id="artLinks" placeholder="Liens">
+
+          <select id="artLevel">
+            <option>Niveau</option>
+            <option>Structuration</option>
+            <option>Déploiement</option>
+            <option>Expansion</option>
+            <option>Partenaire</option>
+          </select>
+
+          <button class="btn" onclick="addArtist()">Ajouter artiste</button>
+        </div>
+
+        <div id="artistsList" style="margin-top:15px"></div>
+      </div>
+    </div>
+
+    <div id="admPartners" class="tabpane">
+      <div class="panel-title">
+        <h2>Répertoire partenaires</h2>
+        <p>Salles, médias, studios, photographes, vidéastes, techniciens, imprimeurs, commanditaires.</p>
+      </div>
+
+      <div class="card">
+        <div class="form three">
+          <input id="parName" placeholder="Nom partenaire">
+
+          <select id="parType">
+            <option>Type</option>
+            <option>Média</option>
+            <option>Salle</option>
+            <option>Studio</option>
+            <option>Photo</option>
+            <option>Vidéo</option>
+            <option>Technicien</option>
+            <option>Imprimeur</option>
+            <option>Commanditaire</option>
+            <option>International</option>
+            <option>Technologie interne</option>
+          </select>
+
+          <input id="parContact" placeholder="Contact / lien / courriel">
+          <textarea id="parNote" placeholder="Note stratégique"></textarea>
+          <button class="btn" onclick="addPartner()">Ajouter partenaire</button>
+        </div>
+
+        <div id="partnersList" style="margin-top:15px"></div>
+      </div>
+    </div>
+
+    <div id="admOpps" class="tabpane">
+      <div class="panel-title">
+        <h2>Opportunités</h2>
+        <p>Shows, médias, commandites, appels de projets, collaborations et pistes internationales.</p>
+      </div>
+
+      <div class="card">
+        <div class="form three">
+          <input id="oppName" placeholder="Nom opportunité">
+
+          <select id="oppType">
+            <option>Type</option>
+            <option>Show</option>
+            <option>Média</option>
+            <option>Commandite</option>
+            <option>Festival</option>
+            <option>Collaboration</option>
+            <option>International</option>
+            <option>Diffusion future</option>
+          </select>
+
+          <input id="oppDate" type="date">
+          <input id="oppFor" placeholder="Pour quel artiste / projet?">
+          <textarea id="oppNote" placeholder="Description / prochaine action"></textarea>
+          <button class="btn" onclick="addOpportunity()">Ajouter opportunité</button>
+        </div>
+
+        <div id="oppsList" style="margin-top:15px"></div>
+      </div>
+    </div>
+
+    <div id="admCalendar" class="tabpane">
+      <div class="panel-title">
+        <h2>Calendrier / échéances</h2>
+        <p>Vue regroupée des dates importantes de la branche Service 360°.</p>
+      </div>
+
+      <div class="card" id="calendarList"></div>
+    </div>
+
+    <div id="admFinance" class="tabpane">
+      <div class="panel-title">
+        <h2>Tableau financier global</h2>
+        <p>Revenus potentiels, dépôts, soldes, coûts, marges et parts.</p>
+      </div>
+
+      <div id="financePanel"></div>
+    </div>
+
+    <div id="admTemplates" class="tabpane">
+      <div class="panel-title">
+        <h2>Modèles de communication</h2>
+        <p>Textes rapides à copier pour accélérer les suivis.</p>
+      </div>
+
+      <div class="grid cols2" id="templatesPanel"></div>
+    </div>
+  </div>
+</section>
+
+<div class="footer">
+  Sous-site Service 360° — Branche du Mouvement Artistique du Québec.
+  Future intégration possible à la plateforme de diffusion Meyden.
+  Trovici.com : partenaire technologique interne Meyden.
+</div>
+
+<div class="cartbox">
+  <b>Panier à la carte</b><br>
+  <small id="cartSummary">Aucun service ajouté.</small>
+  <div class="cart-list" id="cartList"></div>
+  <div class="price" id="cartTotal">0 $</div>
+  <button class="btn small" onclick="navTo('soumettre')">Soumettre avec ce panier</button>
+  <button class="btn secondary small" onclick="resetCart()">Réinitialiser</button>
+</div>
+
+</div>
+
+<div class="drawer" id="drawer">
+  <div class="drawer-inner">
+    <div class="adminbar">
+      <div>
+        <span class="tag">Fiche stratégique — branche 360°</span>
+        <h2 id="drawerTitle">Projet</h2>
+        <p class="mini" id="drawerSub"></p>
+      </div>
+
+      <div>
+        <button class="btn secondary small" onclick="copySummary()">Copier résumé</button>
+        <button class="btn secondary small" onclick="copyQuote()">Copier devis</button>
+        <button class="btn secondary small" onclick="copyReceipt()">Copier reçu</button>
+        <button class="btn small" onclick="closeDrawer()">Fermer</button>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="active" onclick="openTab('tabStrategie',this)">Stratégie</button>
+      <button onclick="openTab('tabFinances',this)">Finances</button>
+      <button onclick="openTab('tabLivrables',this)">Livrables</button>
+      <button onclick="openTab('tabDocs',this)">Documents</button>
+      <button onclick="openTab('tabComms',this)">Communications</button>
+      <button onclick="openTab('tabHistory',this)">Historique</button>
+      <button onclick="openTab('tabCopie',this)">Copie rapide</button>
+    </div>
+
+    <div id="tabStrategie" class="tabpane active"></div>
+    <div id="tabFinances" class="tabpane"></div>
+    <div id="tabLivrables" class="tabpane"></div>
+    <div id="tabDocs" class="tabpane"></div>
+    <div id="tabComms" class="tabpane"></div>
+    <div id="tabHistory" class="tabpane"></div>
+    <div id="tabCopie" class="tabpane"></div>
+  </div>
+</div>
+
+<script>
+const serviceData=[
+  {name:"Incubation N1",price:100,unit:"/ mois",desc:"Structuration, orientation artistique, premiers outils, intégration progressive."},
+  {name:"Incubation N2",price:250,unit:"/ mois",desc:"Accompagnement régulier, stratégie de contenu, visibilité et plan d'action."},
+  {name:"Visuel promotionnel",price:75,unit:"",desc:"Image simple pour annonce, réseaux sociaux ou projet culturel."},
+  {name:"Affiche événementielle",price:100,unit:"",desc:"Visuel professionnel pour show, lancement ou campagne."},
+  {name:"Capsule courte",price:150,unit:"",desc:"Teaser, annonce, single, show, format 15 secondes à 1 minute."},
+  {name:"Montage vidéo court",price:150,unit:"",desc:"Montage court adapté aux plateformes sociales."},
+  {name:"Séance photo simple",price:200,unit:"",desc:"Photo artiste, groupe, artisan ou projet culturel."},
+  {name:"Dossier de présentation",price:200,unit:"",desc:"Dossier artiste, commandite, média ou partenaire."},
+  {name:"Vidéo promotionnelle",price:300,unit:"",desc:"Vidéo structurée pour présenter un projet ou événement."},
+  {name:"Captation événementielle",price:350,unit:"",desc:"Captation live, contenu de spectacle et documentation."},
+  {name:"Stratégie de revenus",price:200,unit:"",desc:"Billetterie, merch, commandites, scénarios et valorisation."},
+  {name:"Vidéoclip simple",price:500,unit:"",desc:"Clip de base pour artiste, single ou performance."},
+  {name:"Page HTML simple",price:150,unit:"",desc:"Page web, fiche artiste, vitrine ou prototype simple."},
+  {name:"Catalogue numérique",price:500,unit:"",desc:"Catalogue interactif pour services, artistes ou partenaires."},
+  {name:"Application simple",price:750,unit:"",desc:"Outil interne, formulaire avancé, dashboard ou prototype."}
+];
+
+let cart=JSON.parse(localStorage.getItem("meyden360v5cart")||"[]");
+let activeProjectIndex=null;
+let currentAdmin=null;
+
+function money(n){
+  return (Number(n)||0).toLocaleString("fr-CA")+" $";
+}
+
+function today(){
+  return new Date().toISOString().split("T")[0];
+}
+
+function uid(){
+  return "P-"+Date.now().toString().slice(-6);
+}
+
+function val(id){
+  return document.getElementById(id).value.trim();
+}
+
+function get(key){
+  return JSON.parse(localStorage.getItem(key)||"[]");
+}
+
+function set(key,v){
+  localStorage.setItem(key,JSON.stringify(v));
+}
+
+function getProjects(){
+  return get("meyden360v5projects");
+}
+
+function setProjects(p){
+  set("meyden360v5projects",p);
+  renderAdmin();
+}
+
+function renderServices(){
+  document.getElementById("services").innerHTML=serviceData.map((s,i)=>`
+    <div class="card service-card">
+      <span class="tag">Service 360°</span>
+      <h3>${s.name}</h3>
+      <div class="price">À partir de ${money(s.price)} ${s.unit}</div>
+      <p>${s.desc}</p>
+      <button class="btn secondary" onclick="addService(${i})">Ajouter au panier</button>
+    </div>
+  `).join("");
+}
+
+function addService(i){
+  cart.push(serviceData[i]);
+  saveCart();
+}
+
+function saveCart(){
+  localStorage.setItem("meyden360v5cart",JSON.stringify(cart));
+  renderCart();
+}
+
+function resetCart(){
+  cart=[];
+  saveCart();
+}
+
+function removeCart(i){
+  cart.splice(i,1);
+  saveCart();
+}
+
+function renderCart(){
+  const sum=document.getElementById("cartSummary");
+  const list=document.getElementById("cartList");
+  const total=document.getElementById("cartTotal");
+
+  if(!cart.length){
+    sum.innerText="Aucun service ajouté.";
+    list.innerHTML="";
+    total.innerText="0 $";
+    return;
+  }
+
+  sum.innerText=cart.length+" service(s) sélectionné(s).";
+  list.innerHTML=cart.map((s,i)=>`
+    <div>
+      • ${s.name} — ${money(s.price)}
+      <button onclick="removeCart(${i})" style="float:right;background:none;color:#ff9a3d;border:0">x</button>
+    </div>
+  `).join("");
+
+  total.innerText="Total indicatif : "+money(cart.reduce((a,s)=>a+(s.price||0),0));
+}
+
+function showSection(id,btn){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+  if(btn)btn.classList.add("active");
+
+  if(id==="admin")renderAdmin();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function navTo(id){
+  const labels={
+    ecosysteme:"Écosystème",
+    catalogue:"Catalogue",
+    soumettre:"Soumettre",
+    admin:"Admin",
+    client:"Portail client"
+  };
+
+  const btn=[...document.querySelectorAll(".nav button")].find(b=>b.textContent===labels[id]);
+  showSection(id,btn);
+}
+
+function copyText(id){
+  navigator.clipboard.writeText(document.getElementById(id).innerText);
+  alert("Texte copié.");
+}
+
+function autoScore(p){
+  let score=35;
+
+  if(p.level.includes("haut"))score+=25;
+  if(p.level.includes("Prêt")||p.level.includes("Événement"))score+=15;
+  if(p.objective.includes("Revenus")||p.objective.includes("International"))score+=15;
+  if((p.value||0)>=500)score+=10;
+  if(p.links&&p.links.length>5)score+=8;
+
+  return Math.min(100,score);
+}
+
+function defaultDeliverables(services){
+  return (services||[]).map(s=>({
+    name:s.name||s,
+    status:"À faire",
+    owner:"À assigner",
+    due:"",
+    note:""
+  }));
+}
+
+function logChange(p,msg){
+  p.history=p.history||[];
+  p.history.unshift({
+    date:new Date().toLocaleString("fr-CA"),
+    admin:currentAdmin||"Système",
+    change:msg
+  });
+}
+
+function submitProject(){
+  const services=cart.map(s=>({name:s.name,price:s.price,unit:s.unit}));
+  const value=services.reduce((a,s)=>a+(s.price||0),0);
+
+  const p={
+    branch:"Service 360° Meyden × L'Étiquette",
+    futureIntegration:"Future plateforme de diffusion Meyden",
+    id:uid(),
+    clientCode:"C-"+Math.floor(1000+Math.random()*9000),
+    created:today(),
+
+    client:val("clientName")||"Client sans nom",
+    email:val("clientEmail"),
+    phone:val("clientPhone"),
+    artist:val("artistName")||"Projet sans nom",
+    city:val("city"),
+    source:val("source"),
+    type:val("projectType"),
+    level:val("level"),
+    objective:val("objective"),
+    links:val("links"),
+    targetDate:val("targetDate"),
+    budget:val("budget"),
+    msg:val("projectMsg"),
+
+    services,
+    value,
+    deposit:0,
+    costs:0,
+    splitMeyden:50,
+    splitEtiquette:50,
+
+    assigned:"Meyden + L'Étiquette",
+    status:"Nouveau",
+    priority:"Moyenne",
+    nextAction:"Analyser le projet dans la branche Service 360°",
+    risk:"Moyen",
+    score:0,
+
+    deliverables:defaultDeliverables(services),
+    docs:[
+      {name:"Dossier de presse",state:"À recevoir"},
+      {name:"Logo / visuels",state:"À recevoir"},
+      {name:"Liens officiels",state:"À valider"}
+    ],
+    comms:[
+      {date:today(),admin:"Système",type:"Soumission",summary:"Projet créé à partir du sous-site Service 360°.",next:"Analyse humaine"}
+    ],
+    history:[],
+    adminNote:"À analyser"
+  };
+
+  p.score=autoScore(p);
+  logChange(p,"Création du projet dans la branche Service 360°");
+
+  const projects=getProjects();
+  projects.unshift(p);
+  set("meyden360v5projects",projects);
+
+  document.getElementById("submitResult").style.display="block";
+  document.getElementById("submitResult").innerHTML=`
+    Fiche projet créée : <b>${p.artist}</b>.<br>
+    Code projet : <b>${p.id}</b> — Code portail client : <b>${p.clientCode}</b>
+  `;
+}
+
+function adminLogin(){
+  const pseudo=val("adminPseudo").toUpperCase();
+  const code=val("adminCode");
+
+  const ok=
+    (pseudo==="MEYDEN"&&code==="1984")||
+    (pseudo==="LETIQUETTE"&&code==="2026")||
+    (pseudo==="ADMIN"&&code==="3600");
+
+  if(!ok){
+    alert("Accès refusé dans le prototype.");
+    return;
+  }
+
+  localStorage.setItem("meyden360v5admin",pseudo);
+  renderAdmin();
+}
+
+function adminLogout(){
+  localStorage.removeItem("meyden360v5admin");
+  renderAdmin();
+}
+
+function openAdminTab(id,btn){
+  document.querySelectorAll("#dashboardPanel > .tabpane").forEach(t=>t.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+
+  document.querySelectorAll("#dashboardPanel > .tabs button").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+
+  renderAdmin();
+}
+
+function renderAdmin(){
+  currentAdmin=localStorage.getItem("meyden360v5admin");
+
+  const login=document.getElementById("loginPanel");
+  const dash=document.getElementById("dashboardPanel");
+
+  if(!currentAdmin){
+    login.style.display="block";
+    dash.style.display="none";
+    return;
+  }
+
+  login.style.display="none";
+  dash.style.display="block";
+
+  document.getElementById("adminHello").innerText="Connecté comme : "+currentAdmin+" • Branche : Service 360°";
+
+  renderOverview();
+  renderProjects();
+  renderDirectories();
+  renderCalendar();
+  renderFinance();
+  renderTemplates();
+}
+
+function renderOverview(){
+  const p=getProjects();
+
+  document.getElementById("kpiNew").innerText=p.filter(x=>x.status==="Nouveau").length;
+  document.getElementById("kpiProd").innerText=p.filter(x=>x.status==="En production").length;
+  document.getElementById("kpiRelance").innerText=p.filter(x=>x.status==="À relancer").length;
+  document.getElementById("kpiValue").innerText=money(p.reduce((a,x)=>a+(x.value||0),0));
+  document.getElementById("kpiBalance").innerText=money(p.reduce((a,x)=>a+Math.max(0,(x.value||0)-(x.deposit||0)),0));
+
+  renderKanban(p);
+  renderAlerts(p);
+}
+
+function renderAlerts(p){
+  const alerts=[];
+
+  p.forEach(x=>{
+    if((x.value||0)>0&&(x.deposit||0)===0)alerts.push("Dépôt manquant : "+x.artist);
+    if(!x.assigned||x.assigned==="À assigner")alerts.push("Projet sans responsable : "+x.artist);
+    if(x.status==="À relancer")alerts.push("Relance à faire : "+x.artist);
+    if(x.targetDate&&daysUntil(x.targetDate)<=7&&x.status!=="Livré")alerts.push("Échéance proche : "+x.artist+" ("+x.targetDate+")");
+  });
+
+  document.getElementById("alertsBox").innerHTML=alerts.length
+    ? alerts.map(a=>`<div class="alert">${a}</div>`).join("")
+    : `<div class="alert good">Aucune alerte critique pour le moment.</div>`;
+}
+
+function daysUntil(date){
+  return Math.ceil((new Date(date)-new Date(today()))/(1000*60*60*24));
+}
+
+function renderKanban(projects){
+  const statuses=["Nouveau","En analyse","Proposition","En production","Livré","À relancer"];
+
+  document.getElementById("kanban").innerHTML=statuses.map(st=>`
+    <div class="column">
+      <h3>${st}</h3>
+      ${
+        projects.filter(p=>p.status===st).map(p=>`
+          <div class="kcard">
+            <b>${p.artist}</b>
+            <small>${p.nextAction}<br>${money(p.value)} • score ${p.score}/100<br>Code : ${p.id}</small>
+          </div>
+        `).join("") || `<p class="mini">Aucun projet</p>`
+      }
+    </div>
+  `).join("");
+}
+
+function renderProjects(){
+  const p=getProjects();
+
+  const q=(document.getElementById("searchInput")?.value||"").toLowerCase();
+  const fs=document.getElementById("filterStatus")?.value||"";
+  const fa=document.getElementById("filterAssigned")?.value||"";
+
+  const filtered=p.filter(x=>{
+    const hay=[
+      x.id,
+      x.clientCode,
+      x.artist,
+      x.client,
+      x.city,
+      x.type,
+      x.objective,
+      (x.services||[]).map(s=>s.name).join(" ")
+    ].join(" ").toLowerCase();
+
+    return(!q||hay.includes(q))&&(!fs||x.status===fs)&&(!fa||x.assigned===fa);
+  });
+
+  document.getElementById("projectRows").innerHTML=filtered.map(x=>{
+    const realIndex=p.findIndex(pp=>pp.id===x.id);
+
+    return `
+      <tr>
+        <td><b>${x.artist}</b><br><span class="mini">${x.type} • ${x.city||"Ville inconnue"}<br>${x.objective}</span></td>
+        <td>${x.client}<br><span class="mini">${x.email}<br>${x.phone}</span></td>
+        <td><b>${x.score}/100</b><div class="scorebar"><div class="scorefill" style="width:${x.score}%"></div></div><span class="mini">${x.priority} • risque ${x.risk}</span></td>
+        <td><b>${money(x.value)}</b><br><span class="mini">Dépôt ${money(x.deposit)}<br>Solde ${money(Math.max(0,x.value-x.deposit))}</span></td>
+        <td>${x.nextAction||"À définir"}<br><span class="mini">Cible : ${x.targetDate||"Aucune date"}</span></td>
+        <td><span class="status ${statusClass(x.status)}">${x.status}</span></td>
+        <td><b>${x.id}</b><br><span class="mini">${x.clientCode}</span></td>
+        <td><button class="btn small" onclick="openProject(${realIndex})">Ouvrir</button></td>
+      </tr>
+    `;
+  }).join("") || `<tr><td colspan="8">Aucun projet trouvé.</td></tr>`;
+}
+
+function statusClass(s){
+  if(s==="Nouveau")return "sNouveau";
+  if(s==="En analyse"||s==="Proposition")return "sAnalyse";
+  if(s==="En production")return "sProduction";
+  if(s==="Livré")return "sLivre";
+  if(s==="À relancer")return "sRelance";
+  return "sArchive";
+}
+
+function renderDirectories(){
+  renderList("artistsList",get("meyden360v5artists"),["name","discipline","city","level","links"]);
+  renderList("partnersList",get("meyden360v5partners"),["name","type","contact","note"]);
+  renderList("oppsList",get("meyden360v5opps"),["name","type","date","for","note"]);
+}
+
+function renderList(id,arr,keys){
+  const el=document.getElementById(id);
+  if(!el)return;
+
+  el.innerHTML=`
+    <table class="table">
+      <thead>
+        <tr>${keys.map(k=>`<th>${k}</th>`).join("")}</tr>
+      </thead>
+      <tbody>
+        ${
+          arr.map(o=>`
+            <tr>${keys.map(k=>`<td>${escapeHtml(o[k]||"")}</td>`).join("")}</tr>
+          `).join("") || `<tr><td colspan="${keys.length}">Aucune donnée.</td></tr>`
+        }
+      </tbody>
+    </table>
+  `;
+}
+
+function addArtist(){
+  const arr=get("meyden360v5artists");
+
+  arr.unshift({
+    name:val("artName"),
+    discipline:val("artDiscipline"),
+    city:val("artCity"),
+    links:val("artLinks"),
+    level:val("artLevel")
+  });
+
+  set("meyden360v5artists",arr);
+  renderDirectories();
+}
+
+function addPartner(){
+  const arr=get("meyden360v5partners");
+
+  arr.unshift({
+    name:val("parName"),
+    type:val("parType"),
+    contact:val("parContact"),
+    note:val("parNote")
+  });
+
+  set("meyden360v5partners",arr);
+  renderDirectories();
+}
+
+function addOpportunity(){
+  const arr=get("meyden360v5opps");
+
+  arr.unshift({
+    name:val("oppName"),
+    type:val("oppType"),
+    date:val("oppDate"),
+    for:val("oppFor"),
+    note:val("oppNote")
+  });
+
+  set("meyden360v5opps",arr);
+  renderDirectories();
+  renderCalendar();
+}
+
+function renderCalendar(){
+  const events=[];
+
+  getProjects().forEach(p=>{
+    if(p.targetDate)events.push({date:p.targetDate,type:"Projet 360°",name:p.artist,note:p.nextAction});
+  });
+
+  get("meyden360v5opps").forEach(o=>{
+    if(o.date)events.push({date:o.date,type:"Opportunité",name:o.name,note:o.note});
+  });
+
+  events.sort((a,b)=>a.date.localeCompare(b.date));
+
+  const el=document.getElementById("calendarList");
+  if(!el)return;
+
+  el.innerHTML=`
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Type</th>
+          <th>Nom</th>
+          <th>Note / action</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${
+          events.map(e=>`
+            <tr>
+              <td>${e.date}</td>
+              <td>${e.type}</td>
+              <td>${e.name}</td>
+              <td>${e.note||""}</td>
+            </tr>
+          `).join("") || `<tr><td colspan="4">Aucune échéance.</td></tr>`
+        }
+      </tbody>
+    </table>
+  `;
+}
+
+function renderFinance(){
+  const p=getProjects();
+
+  const value=p.reduce((a,x)=>a+(x.value||0),0);
+  const dep=p.reduce((a,x)=>a+(x.deposit||0),0);
+  const costs=p.reduce((a,x)=>a+(x.costs||0),0);
+  const bal=value-dep;
+  const margin=value-costs;
+
+  const el=document.getElementById("financePanel");
+  if(!el)return;
+
+  el.innerHTML=`
+    <div class="grid cols5">
+      <div class="card"><span class="tag">Valeur</span><h3>${money(value)}</h3><p>Potentiel total</p></div>
+      <div class="card"><span class="tag">Dépôts</span><h3>${money(dep)}</h3><p>Reçu</p></div>
+      <div class="card"><span class="tag">Solde</span><h3>${money(bal)}</h3><p>À recevoir</p></div>
+      <div class="card"><span class="tag">Coûts</span><h3>${money(costs)}</h3><p>Estimés</p></div>
+      <div class="card"><span class="tag">Marge</span><h3>${money(margin)}</h3><p>Estimée</p></div>
+    </div>
+
+    <div class="card" style="margin-top:15px">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Projet</th>
+            <th>Valeur</th>
+            <th>Dépôt</th>
+            <th>Solde</th>
+            <th>Coûts</th>
+            <th>Marge</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${
+            p.map(x=>`
+              <tr>
+                <td>${x.artist}</td>
+                <td>${money(x.value)}</td>
+                <td>${money(x.deposit)}</td>
+                <td>${money(Math.max(0,x.value-x.deposit))}</td>
+                <td>${money(x.costs)}</td>
+                <td>${money((x.value||0)-(x.costs||0))}</td>
+              </tr>
+            `).join("")
+          }
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderTemplates(){
+  const templates=[
+    [
+      "Positionnement Service 360°",
+      "Le Service 360° Meyden × L'Étiquette est une branche spécialisée de l'écosystème Meyden, développée sous forme de sous-site vitrine public et d'outil de travail interne. À long terme, cette branche pourra s'intégrer à la future plateforme de diffusion Meyden."
+    ],
+    [
+      "Relance dépôt",
+      "Bonjour,\n\nPetit suivi concernant le dépôt du projet. Dès réception, nous pouvons confirmer officiellement la prochaine étape et réserver le temps de production.\n\nMeyden × L'Étiquette"
+    ],
+    [
+      "Demande documents",
+      "Bonjour,\n\nPour avancer efficacement, nous aurions besoin des éléments suivants : logo, photos, liens officiels, bio courte et tout matériel déjà disponible.\n\nMerci."
+    ],
+    [
+      "Proposition reçue",
+      "Bonjour,\n\nMerci pour les informations. Le projet est bien reçu dans le sous-site Service 360° Meyden × L'Étiquette. Nous allons l'analyser et revenir avec une proposition adaptée."
+    ]
+  ];
+
+  const el=document.getElementById("templatesPanel");
+  if(!el)return;
+
+  el.innerHTML=templates.map((t,i)=>`
+    <div class="card">
+      <h3>${t[0]}</h3>
+      <div class="copybox" id="tpl${i}">${escapeHtml(t[1])}</div>
+      <button class="btn secondary small" style="margin-top:10px" onclick="copyText('tpl${i}')">Copier</button>
+    </div>
+  `).join("");
+}
+
+function openProject(index){
+  activeProjectIndex=index;
+  document.getElementById("drawer").classList.add("show");
+  renderDrawer();
+}
+
+function closeDrawer(){
+  document.getElementById("drawer").classList.remove("show");
+  activeProjectIndex=null;
+  renderAdmin();
+}
+
+function openTab(id,btn){
+  document.querySelectorAll(".drawer .tabpane").forEach(t=>t.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+
+  document.querySelectorAll(".drawer .tabs button").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+}
+
+function renderDrawer(){
+  const p=getProjects();
+  const x=p[activeProjectIndex];
+
+  if(!x)return;
+
+  document.getElementById("drawerTitle").innerText=x.artist;
+  document.getElementById("drawerSub").innerText=`${x.id} • Code client ${x.clientCode} • Branche Service 360° • ${x.client} • créé le ${x.created}`;
+
+  document.getElementById("tabStrategie").innerHTML=`
+    <div class="notice" style="margin-bottom:15px">
+      Cette fiche appartient à la branche Service 360° et pourra plus tard nourrir la future plateforme de diffusion Meyden.
+    </div>
+
+    <div class="grid cols2">
+      <div class="card">
+        <h3>Analyse stratégique</h3>
+        <div class="form">
+          <select onchange="updateActive('status',this.value)">${opts(["Nouveau","En analyse","Proposition","En production","Livré","À relancer","Archivé"],x.status)}</select>
+          <select onchange="updateActive('assigned',this.value)">${opts(["Meyden + L'Étiquette","Meyden","L'Étiquette"],x.assigned)}</select>
+          <select onchange="updateActive('priority',this.value)">${opts(["Basse","Moyenne","Haute","Urgente"],x.priority)}</select>
+          <select onchange="updateActive('risk',this.value)">${opts(["Faible","Moyen","Élevé"],x.risk)}</select>
+          <input value="${escapeHtml(x.nextAction||"")}" onchange="updateActive('nextAction',this.value)" placeholder="Prochaine action prioritaire">
+          <input type="number" value="${x.score}" onchange="updateActive('score',Number(this.value))" placeholder="Score /100">
+          <textarea onchange="updateActive('adminNote',this.value)" placeholder="Note admin">${escapeHtml(x.adminNote||"")}</textarea>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Résumé projet</h3>
+        <p>
+          <b>Client :</b> ${x.client}<br>
+          <b>Courriel :</b> ${x.email}<br>
+          <b>Téléphone :</b> ${x.phone}<br>
+          <b>Ville :</b> ${x.city}<br>
+          <b>Source :</b> ${x.source}
+        </p>
+        <p style="margin-top:10px">
+          <b>Niveau :</b> ${x.level}<br>
+          <b>Objectif :</b> ${x.objective}<br>
+          <b>Budget :</b> ${x.budget}<br>
+          <b>Date cible :</b> ${x.targetDate||"Aucune"}
+        </p>
+        <p style="margin-top:10px">${x.msg||""}</p>
+        <div class="pillrow">${(x.services||[]).map(s=>`<span class="pill">${s.name}</span>`).join("")}</div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("tabFinances").innerHTML=`
+    <div class="grid cols2">
+      <div class="card">
+        <h3>Finances</h3>
+        <div class="form">
+          <input type="number" value="${x.value||0}" onchange="updateActive('value',Number(this.value))" placeholder="Valeur totale">
+          <input type="number" value="${x.deposit||0}" onchange="updateActive('deposit',Number(this.value))" placeholder="Dépôt reçu">
+          <input type="number" value="${x.costs||0}" onchange="updateActive('costs',Number(this.value))" placeholder="Coûts">
+          <input type="number" value="${x.splitMeyden||50}" onchange="updateActive('splitMeyden',Number(this.value))" placeholder="% Meyden">
+          <input type="number" value="${x.splitEtiquette||50}" onchange="updateActive('splitEtiquette',Number(this.value))" placeholder="% L'Étiquette">
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Calcul</h3>
+        <p>
+          <b>Valeur :</b> ${money(x.value)}<br>
+          <b>Dépôt :</b> ${money(x.deposit)}<br>
+          <b>Solde :</b> ${money(Math.max(0,x.value-x.deposit))}<br>
+          <b>Coûts :</b> ${money(x.costs)}<br>
+          <b>Marge :</b> ${money((x.value||0)-(x.costs||0))}
+        </p>
+        <p style="margin-top:10px">
+          <b>Part Meyden :</b> ${money(((x.value||0)-(x.costs||0))*(x.splitMeyden||0)/100)}<br>
+          <b>Part L'Étiquette :</b> ${money(((x.value||0)-(x.costs||0))*(x.splitEtiquette||0)/100)}
+        </p>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("tabLivrables").innerHTML=`
+    <div class="card">
+      <h3>Livrables</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Service</th>
+            <th>Responsable</th>
+            <th>Statut</th>
+            <th>Échéance</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${
+            (x.deliverables||[]).map((d,i)=>`
+              <tr>
+                <td>${d.name}</td>
+                <td><input value="${escapeHtml(d.owner||"")}" onchange="updateDeliverable(${i},'owner',this.value)"></td>
+                <td><select onchange="updateDeliverable(${i},'status',this.value)">${opts(["À faire","En cours","En révision","Livré"],d.status)}</select></td>
+                <td><input type="date" value="${d.due||""}" onchange="updateDeliverable(${i},'due',this.value)"></td>
+                <td><input value="${escapeHtml(d.note||"")}" onchange="updateDeliverable(${i},'note',this.value)"></td>
+              </tr>
+            `).join("")
+          }
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  document.getElementById("tabDocs").innerHTML=`
+    <div class="card">
+      <h3>Documents</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Document</th>
+            <th>État</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${
+            (x.docs||[]).map((d,i)=>`
+              <tr>
+                <td><input value="${escapeHtml(d.name||"")}" onchange="updateDoc(${i},'name',this.value)"></td>
+                <td><select onchange="updateDoc(${i},'state',this.value)">${opts(["À recevoir","Reçu","À valider","Livré"],d.state)}</select></td>
+              </tr>
+            `).join("")
+          }
+        </tbody>
+      </table>
+      <button class="btn secondary small" style="margin-top:12px" onclick="addDoc()">Ajouter document</button>
+    </div>
+  `;
+
+  document.getElementById("tabComms").innerHTML=`
+    <div class="card">
+      <h3>Journal de communication</h3>
+      <div class="form three">
+        <input id="commType" placeholder="Type">
+        <input id="commSummary" placeholder="Résumé">
+        <input id="commNext" placeholder="Prochaine action">
+      </div>
+      <button class="btn secondary small" style="margin:12px 0" onclick="addComm()">Ajouter communication</button>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Admin</th>
+            <th>Type</th>
+            <th>Résumé</th>
+            <th>Prochaine action</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${
+            (x.comms||[]).map(c=>`
+              <tr>
+                <td>${c.date}</td>
+                <td>${c.admin}</td>
+                <td>${c.type}</td>
+                <td>${c.summary}</td>
+                <td>${c.next}</td>
+              </tr>
+            `).join("")
+          }
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  document.getElementById("tabHistory").innerHTML=`
+    <div class="card">
+      <h3>Historique des modifications</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Admin</th>
+            <th>Modification</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${
+            (x.history||[]).map(h=>`
+              <tr>
+                <td>${h.date}</td>
+                <td>${h.admin}</td>
+                <td>${h.change}</td>
+              </tr>
+            `).join("")
+          }
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  document.getElementById("tabCopie").innerHTML=`
+    <div class="grid cols2">
+      <div class="card"><h3>Résumé projet</h3><div class="copybox">${escapeHtml(makeSummary(x))}</div></div>
+      <div class="card"><h3>Devis rapide</h3><div class="copybox">${escapeHtml(makeQuote(x))}</div></div>
+      <div class="card"><h3>Reçu rapide</h3><div class="copybox">${escapeHtml(makeReceipt(x))}</div></div>
+      <div class="card"><h3>Suivi client</h3><div class="copybox">${escapeHtml(makeFollowup(x))}</div></div>
+    </div>
+  `;
+}
+
+function opts(arr,val){
+  return arr.map(o=>`<option ${o===val?"selected":""}>${o}</option>`).join("");
+}
+
+function escapeHtml(s){
+  return String(s||"").replace(/[&<>"']/g,m=>({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#039;'
+  }[m]));
+}
+
+function updateActive(key,val){
+  const p=getProjects();
+  const x=p[activeProjectIndex];
+  const old=x[key];
+
+  x[key]=val;
+  logChange(x,`${key} modifié : ${old} → ${val}`);
+
+  set("meyden360v5projects",p);
+  renderDrawer();
+}
+
+function updateDeliverable(i,key,val){
+  const p=getProjects();
+  const x=p[activeProjectIndex];
+
+  x.deliverables[i][key]=val;
+  logChange(x,`Livrable ${x.deliverables[i].name} : ${key} modifié`);
+
+  set("meyden360v5projects",p);
+}
+
+function updateDoc(i,key,val){
+  const p=getProjects();
+  const x=p[activeProjectIndex];
+
+  x.docs[i][key]=val;
+  logChange(x,`Document ${i+1} : ${key} modifié`);
+
+  set("meyden360v5projects",p);
+}
+
+function addDoc(){
+  const p=getProjects();
+  const x=p[activeProjectIndex];
+
+  x.docs.push({name:"Nouveau document",state:"À recevoir"});
+  logChange(x,"Document ajouté");
+
+  set("meyden360v5projects",p);
+  renderDrawer();
+}
+
+function addComm(){
+  const p=getProjects();
+  const x=p[activeProjectIndex];
+
+  x.comms.unshift({
+    date:today(),
+    admin:currentAdmin||"Admin",
+    type:val("commType")||"Note",
+    summary:val("commSummary")||"",
+    next:val("commNext")||""
+  });
+
+  logChange(x,"Communication ajoutée");
+  set("meyden360v5projects",p);
+  renderDrawer();
+}
+
+function makeSummary(x){
+  return `RÉSUMÉ PROJET — ${x.artist}
+Branche : Service 360° Meyden × L'Étiquette
+Code projet : ${x.id}
+Code portail client : ${x.clientCode}
+Client : ${x.client}
+Contact : ${x.email} / ${x.phone}
+Ville : ${x.city}
+Type : ${x.type}
+Objectif : ${x.objective}
+Niveau : ${x.level}
+Services : ${(x.services||[]).map(s=>s.name).join(", ")}
+Valeur indicative : ${money(x.value)}
+Dépôt reçu : ${money(x.deposit)}
+Solde : ${money(Math.max(0,x.value-x.deposit))}
+Statut : ${x.status}
+Responsable : ${x.assigned}
+Prochaine action : ${x.nextAction}
+Note : ${x.adminNote||""}`;
+}
+
+function makeQuote(x){
+  return `DEVIS INDICATIF — ${x.artist}
+
+Branche : Service 360° Meyden × L'Étiquette
+Client : ${x.client}
+Code projet : ${x.id}
+
+Services proposés :
+${(x.services||[]).map(s=>"- "+s.name+" : "+money(s.price||0)).join("\n")}
+
+Total indicatif : ${money(x.value)}
+Dépôt recommandé : ${money(Math.round((x.value||0)*0.3))}
+Solde estimé : ${money((x.value||0)-Math.round((x.value||0)*0.3))}
+
+Les prix peuvent varier selon les besoins, délais, ressources et ententes finales.
+
+Meyden × L'Étiquette
+Service 360° — branche du Mouvement Artistique du Québec`;
+}
+
+function makeReceipt(x){
+  return `REÇU — ${x.artist}
+
+Reçu de : ${x.client}
+Montant reçu : ${money(x.deposit)}
+Projet : ${x.artist}
+Code projet : ${x.id}
+Solde restant : ${money(Math.max(0,x.value-x.deposit))}
+
+Meyden × L'Étiquette
+Service 360° — branche du Mouvement Artistique du Québec`;
+}
+
+function makeFollowup(x){
+  return `Bonjour ${x.client},
+
+Merci pour la soumission du projet ${x.artist}.
+
+Votre demande est bien reçue dans la branche Service 360° Meyden × L'Étiquette. La prochaine étape sera : ${x.nextAction || "analyser le projet et revenir avec une proposition adaptée"}.
+
+Code projet : ${x.id}
+Code portail client : ${x.clientCode}
+
+Meyden × L'Étiquette
+Service 360° — branche du Mouvement Artistique du Québec`;
+}
+
+function copySummary(){
+  navigator.clipboard.writeText(makeSummary(getProjects()[activeProjectIndex]));
+  alert("Résumé copié.");
+}
+
+function copyQuote(){
+  navigator.clipboard.writeText(makeQuote(getProjects()[activeProjectIndex]));
+  alert("Devis copié.");
+}
+
+function copyReceipt(){
+  navigator.clipboard.writeText(makeReceipt(getProjects()[activeProjectIndex]));
+  alert("Reçu copié.");
+}
+
+function loadClientPortal(){
+  const code=val("clientProjectCode").toUpperCase();
+
+  const x=getProjects().find(p=>
+    p.id.toUpperCase()===code || p.clientCode.toUpperCase()===code
+  );
+
+  const el=document.getElementById("clientPortalResult");
+
+  if(!x){
+    el.innerHTML=`<div class="alert">Aucun projet trouvé avec ce code.</div>`;
+    return;
+  }
+
+  el.innerHTML=`
+    <div class="notice" style="margin-bottom:15px">
+      Ce portail client concerne la branche Service 360° Meyden × L'Étiquette.
+    </div>
+
+    <div class="grid cols2">
+      <div class="card clientbox">
+        <h3>${x.artist}</h3>
+        <p>
+          <b>Statut :</b> ${x.status}<br>
+          <b>Prochaine étape :</b> ${x.nextAction}<br>
+          <b>Responsable :</b> ${x.assigned}<br>
+          <b>Date cible :</b> ${x.targetDate||"À confirmer"}
+        </p>
+        <div class="pillrow">${(x.services||[]).map(s=>`<span class="pill">${s.name}</span>`).join("")}</div>
+      </div>
+
+      <div class="card">
+        <h3>Finances</h3>
+        <p>
+          <b>Valeur indicative :</b> ${money(x.value)}<br>
+          <b>Dépôt reçu :</b> ${money(x.deposit)}<br>
+          <b>Solde :</b> ${money(Math.max(0,x.value-x.deposit))}
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Documents</h3>
+        ${(x.docs||[]).map(d=>`<p>• ${d.name} — ${d.state}</p>`).join("")}
+      </div>
+
+      <div class="card">
+        <h3>Livrables</h3>
+        ${(x.deliverables||[]).map(d=>`<p>• ${d.name} — ${d.status}</p>`).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function seedAll(){
+  const samples=[
+    {
+      artist:"Matante Mutante",
+      client:"Projet interne",
+      email:"",
+      phone:"",
+      city:"Montréal",
+      source:"Meyden",
+      type:"Musique / groupe",
+      level:"Événement à venir",
+      objective:"Visibilité",
+      links:"",
+      targetDate:today(),
+      budget:"350 $ à 750 $",
+      msg:"Show, image, contenu et couverture.",
+      services:[
+        {name:"Forfait Scène",price:350},
+        {name:"Capsule courte",price:150}
+      ],
+      value:500,
+      deposit:150,
+      costs:60,
+      splitMeyden:60,
+      splitEtiquette:40,
+      assigned:"Meyden + L'Étiquette",
+      status:"En production",
+      priority:"Haute",
+      nextAction:"Préparer visuels + retour médiatique",
+      risk:"Moyen"
+    },
+    {
+      artist:"Artisan Québec",
+      client:"Client test",
+      email:"client@test.com",
+      phone:"",
+      city:"Québec",
+      source:"Formulaire",
+      type:"Artisan / créateur",
+      level:"Projet actif",
+      objective:"International",
+      links:"portfolio.test",
+      targetDate:"",
+      budget:"750 $ à 1500 $",
+      msg:"Besoin d'une fiche, vitrine et dossier exportable.",
+      services:[
+        {name:"Page HTML simple",price:150},
+        {name:"Dossier de présentation",price:200},
+        {name:"Catalogue numérique",price:500}
+      ],
+      value:850,
+      deposit:0,
+      costs:100,
+      splitMeyden:70,
+      splitEtiquette:30,
+      assigned:"Meyden",
+      status:"Nouveau",
+      priority:"Moyenne",
+      nextAction:"Analyser potentiel Trovici.com",
+      risk:"Faible"
+    }
+  ];
+
+  const p=getProjects();
+
+  samples.forEach(s=>{
+    s.branch="Service 360° Meyden × L'Étiquette";
+    s.futureIntegration="Future plateforme de diffusion Meyden";
+    s.id=uid();
+    s.clientCode="C-"+Math.floor(1000+Math.random()*9000);
+    s.created=today();
+    s.score=autoScore(s);
+    s.deliverables=defaultDeliverables(s.services);
+    s.docs=[
+      {name:"Logo / visuels",state:"À recevoir"},
+      {name:"Liens officiels",state:"À valider"}
+    ];
+    s.comms=[
+      {date:today(),admin:"Système",type:"Donnée test",summary:"Projet test créé dans la branche Service 360°.",next:s.nextAction}
+    ];
+    s.history=[];
+    s.adminNote="Donnée test V5.";
+    logChange(s,"Donnée test créée dans la branche Service 360°");
+    p.unshift(s);
+  });
+
+  set("meyden360v5projects",p);
+
+  set("meyden360v5artists",[
+    {name:"Matante Mutante",discipline:"Metal / performance",city:"Montréal",links:"",level:"Déploiement"},
+    {name:"Symbioz 2.0",discipline:"Musique / audiovisuel",city:"Québec",links:"",level:"Expansion"}
+  ]);
+
+  set("meyden360v5partners",[
+    {name:"Trovici.com",type:"Technologie interne",contact:"Partenaire interne Meyden",note:"Vitrine, catalogues, prototypes, fiches artistes"},
+    {name:"L'Étiquette",type:"Média",contact:"Convergence service 360°",note:"Articles, entrevues, photo, vidéo, visibilité"}
+  ]);
+
+  set("meyden360v5opps",[
+    {name:"Article lancement single",type:"Média",date:today(),for:"Artistes incubés",note:"Préparer dossier et liens officiels"}
+  ]);
+
+  renderAdmin();
+}
+
+function clearAll(){
+  if(confirm("Vider tous les projets, artistes, partenaires et opportunités du prototype?")){
+    [
+      "meyden360v5projects",
+      "meyden360v5artists",
+      "meyden360v5partners",
+      "meyden360v5opps"
+    ].forEach(k=>localStorage.removeItem(k));
+
+    renderAdmin();
+  }
+}
+
+function exportAll(){
+  const data={
+    branch:"Service 360° Meyden × L'Étiquette",
+    parent:"Meyden — Mouvement Artistique du Québec",
+    futureIntegration:"Future plateforme de diffusion Meyden",
+    projects:getProjects(),
+    artists:get("meyden360v5artists"),
+    partners:get("meyden360v5partners"),
+    opportunities:get("meyden360v5opps")
+  };
+
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="sous-site-service-360-v5-export.json";
+  a.click();
+}
+
+renderServices();
+renderCart();
+renderAdmin();
+</script>
+</body>
+</html>
